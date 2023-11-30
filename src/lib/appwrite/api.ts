@@ -16,11 +16,12 @@ export async function createUserAccount(user: INewUser){
 
         const newUser = await saveUserToDB({
             accountId: newAccount.$id,
-            email: newAccount.email,
             name: newAccount.name,
+            email: newAccount.email,
             username: user.username,
             imageUrl: avatarUrl,
         });
+
         return newUser;
     } catch (error) {
         console.log(error);
@@ -29,25 +30,60 @@ export async function createUserAccount(user: INewUser){
 };
 
 export async function saveUserToDB(user: {
-    accountId: string;
-    email: string;
-    name: string;
-    imageUrl: URL;
-    username?: string;
+    accountId: string,
+    email: string,
+    name: string,
+    imageUrl: URL,
+    username?: string,
 }) {
     try {
+        console.log('Before createDocument:', user);
+
         const newUser = await databases.createDocument(
             appwriteConfig.databaseId,
             appwriteConfig.userCollectionId,
             ID.unique(),
-            user,
-        )
+            user
+        );
+
+        console.log('After createDocument, New User:', newUser);
 
         return newUser;
+        
     } catch (error) {
-        console.log(error)
+        console.error('Error in saveUserToDB:', error);
+        throw error; // Ensure the error is propagated up
     }
 };
+
+
+// export async function saveUserToDB(user: {
+//     accountId: string,
+//     email: string,
+//     name: string,
+//     imageUrl: URL,
+//     username?: string,
+// }) {
+//     try {
+//         const newUser = await databases.createDocument(
+//             appwriteConfig.databaseId,
+//             appwriteConfig.userCollectionId,
+//             ID.unique(),
+//             {
+//                 accountId: user.accountId, 
+//                 email: user.email,
+//                 name: user.name,
+//                 imageUrl: user.imageUrl,
+//                 username: user.username,
+//             }
+//         );
+
+//         console.log(newUser) ;
+        
+//     } catch (error) {
+//         console.log(error)
+//     }
+// };
 
 export async function signInAccount(user: { email: string; password: string; }){
     try {
@@ -87,3 +123,12 @@ export async function getCurrentUser(){
         return null;
     }
 };
+
+export async function signOutAccount(){
+    try {
+        const session = await account.deleteSession("current");
+        return session;
+    } catch (error) {
+        console.log(error)
+    }
+}
