@@ -23,11 +23,11 @@ const LeftSidebar = () => {
       <Link to="/"><h1 className="text-6xl text-[#01F9C6] 
         w-[170] h-[36] p-2">FriendS</h1></Link>
         <Link to={`/profile/${user.id}`} className="gap-3 flex items-center">
-            <img src='/assets/icons/profile-placeholder.svg' alt="profile"
+            <img src={user.imageUrl || '/assets/icons/profile-placeholder.svg'} alt="profile"
             className="h-14 w-14 rounded-full" />
             <div className="flex flex-col">
-              <p className="body-bold">{user.name}Username</p>
-              <p className="small-regular text-light-3">@username{user.username}</p>
+              <p className="body-bold">{user.name}</p>
+              <p className="small-regular text-light-3">@{user.username}</p>
             </div>
           </Link>
           <ul className="flex flex-col gap-6">

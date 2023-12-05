@@ -36,54 +36,22 @@ export async function saveUserToDB(user: {
     imageUrl: URL,
     username?: string,
 }) {
-    try {
-        console.log('Before createDocument:', user);
-
-        const newUser = await databases.createDocument(
-            appwriteConfig.databaseId,
-            appwriteConfig.userCollectionId,
-            ID.unique(),
-            user
-        );
-
-        console.log('After createDocument, New User:', newUser);
-
-        return newUser;
-        
-    } catch (error) {
-        console.error('Error in saveUserToDB:', error);
-        throw error; // Ensure the error is propagated up
-    }
+   try {
+    const newUser = await databases.createDocument(
+        appwriteConfig.databaseId,
+        appwriteConfig.userCollectionId,
+        ID.unique(),
+        user
+    )
+    return newUser;
+   } catch (error) {
+    console.log(error);
+    return error;
+   }
 };
 
 
-// export async function saveUserToDB(user: {
-//     accountId: string,
-//     email: string,
-//     name: string,
-//     imageUrl: URL,
-//     username?: string,
-// }) {
-//     try {
-//         const newUser = await databases.createDocument(
-//             appwriteConfig.databaseId,
-//             appwriteConfig.userCollectionId,
-//             ID.unique(),
-//             {
-//                 accountId: user.accountId, 
-//                 email: user.email,
-//                 name: user.name,
-//                 imageUrl: user.imageUrl,
-//                 username: user.username,
-//             }
-//         );
 
-//         console.log(newUser) ;
-        
-//     } catch (error) {
-//         console.log(error)
-//     }
-// };
 
 export async function signInAccount(user: { email: string; password: string; }){
     try {
