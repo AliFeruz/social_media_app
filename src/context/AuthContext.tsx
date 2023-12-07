@@ -1,5 +1,6 @@
 import { getCurrentUser } from "@/lib/appwrite/api";
 import { IUser } from "@/types";
+import { AppwriteException } from "appwrite";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -41,39 +42,45 @@ const AuthProvider = ({ children } : { children: React.ReactNode}) => {
     const navigate = useNavigate();
 
     const checkAuthUser = async () => {
+        setIsLoading(true);
         try {
-            const currentAccount = await getCurrentUser();
-            if (currentAccount) {
-                setUser({
-                    id: currentAccount.$id,
-                    name: currentAccount.name,
-                    username: currentAccount.username,
-                    email: currentAccount.email,
-                    imageUrl: currentAccount.imageUrl,
-                    bio: currentAccount.bio
-                })
-
-                setIsAuthenticated(true);
-                return true;
-            }
-            return false;
+          const currentAccount = await getCurrentUser();
+          if (currentAccount) {
+            setUser({
+              id: currentAccount.$id,
+              name: currentAccount.name,
+              username: currentAccount.username,
+              email: currentAccount.email,
+              imageUrl: currentAccount.imageUrl,
+              bio: currentAccount.bio,
+            });
+            setIsAuthenticated(true);
+    
+            return true;
+          }
+    
+          return false;
         } catch (error) {
-            console.log(error);
-            return false;
+          console.error(error);
+          return false;
         } finally {
-            setIsLoading(false);
+          setIsLoading(false);
         }
-    };
+      };
+    
 
-    useEffect(()=>{
-        
+    useEffect(() => {
+        const cookieFallback = localStorage.getItem("cookieFallback");
         if (
-            localStorage.getItem('cookieFallback') === '[]' ||
-            localStorage.getItem('cookieFallback') === null
-        ) navigate('/sign-in')
-
+          cookieFallback === "[]" ||
+          cookieFallback === null ||
+          cookieFallback === undefined
+        ) {
+          navigate("/sign-in");
+        }
+    
         checkAuthUser();
-    },[]);
+      }, []);
 
     const value = {
         user,
