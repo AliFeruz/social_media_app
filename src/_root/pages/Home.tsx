@@ -5,7 +5,7 @@ import { Models } from "appwrite";
 
 const Home = () => {
   
-  const { data: posts, isPending: isPostLoading, isError: isPosts } = useGetRecentPosts();
+  const { data: posts, isPending: isPostLoading } = useGetRecentPosts();
 
 
 
@@ -30,4 +30,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default Home;

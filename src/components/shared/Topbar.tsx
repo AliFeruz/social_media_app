@@ -5,7 +5,7 @@ import { INITIAL_USER, useUserContext } from "@/context/AuthContext";
 
 
 const Topbar = () => {
-  const { mutate: signOut, isSuccess } = useSignOutAccount();
+  const { mutate: signOut } = useSignOutAccount();
   const navigate = useNavigate();
   const { user, setUser, setIsAuthenticated } = useUserContext();
 

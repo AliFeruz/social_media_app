@@ -29,7 +29,7 @@ if(!posts) {
 }
 
 const shouldShowSearchResult = searchValue !== '';
-const shouldShowPosts = !shouldShowSearchResult && posts?.pages.every((item) => item.documents.length === 0)
+const shouldShowPosts = !shouldShowSearchResult && (posts?.pages || []).every((item) => item?.documents.length === 0)
 
 
   return (
@@ -58,11 +58,11 @@ const shouldShowPosts = !shouldShowSearchResult && posts?.pages.every((item) => 
         {shouldShowSearchResult ? (
           <SearchResults
           isSearchFetching={isSearchFetching}
-          searchedPosts={searchedPosts}/>
+          searchedPosts={searchedPosts || {documents: []}}/>
         ) : shouldShowPosts ? (
           <p className="text-light-4 mt-10 text-center w-full">End of Posts</p>
         ) : posts?.pages.map((item, index) => (
-          <GridPostList key={`page-${index}`} posts={item.documents}/>
+          <GridPostList key={`page-${index}`} posts={item?.documents || []}/>
         ))}
       </div>
       {hasNextPage && !searchValue && (
